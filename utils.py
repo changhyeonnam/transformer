@@ -2,13 +2,12 @@ import os
 from torch.utils.data import Dataset
 import requests
 
-def downloads(root_dir:str='datatset',file_size:str='small'):
+def downloads(file_list,root_dir:str='datatset',file_size:str='small',):
 
+    global url, dir
     if file_size == 'small':
         url = 'https://nlp.stanford.edu/projects/nmt/data/iwslt15.en-vi'
         dir = os.path.join(root_dir, file_size)
-        file_list = ['dict.en-vi', 'train.en', 'train.vi', 'tst2012.en', 'tst2012.vi', 'tst2013.en',
-                          'tst2013.vi', 'vocab.en', 'vocab.vi']
         print('Dataset\'s is about WMT\'15 English-Czech data | data size\'s[small]')
 
     elif file_size == 'medium':
