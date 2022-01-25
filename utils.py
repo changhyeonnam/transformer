@@ -8,15 +8,15 @@ def downloads(file_list,root_dir:str='datatset',file_size:str='small',):
     if file_size == 'small':
         url = 'https://nlp.stanford.edu/projects/nmt/data/iwslt15.en-vi'
         dir = os.path.join(root_dir, file_size)
-        print('Downloading Dataset\'s is about WMT\'15 English-Czech data | data size\'s[small]')
+        print('Downloading Dataset\'s is about IWSLT\'15 English-Vietnamese | data size\'s[small]')
 
     elif file_size == 'medium':
         url = 'https://nlp.stanford.edu/projects/nmt/data/wmt14.en-de'
         dir = os.path.join(root_dir, file_size)
-        print('Downloading Dataset\'s is about WMT\'14 English-German data| data size\'s[medium]')
+        print('Downloading Dataset\'s is about WMT\'14 English-German data | data size\'s[medium]')
 
     elif file_size == 'large':
-        url = 'https://nlp.stanford.edu/projects/nmt/data/iwslt15.en-v'
+        url = 'https://nlp.stanford.edu/projects/nmt/data/wmt15.en-cs'
         dir = os.path.join(root_dir, file_size)
         print('Downloading Dataset\'s is about WMT\'15 English-Czech | data size\'s[large]')
 
