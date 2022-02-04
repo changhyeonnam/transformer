@@ -1,6 +1,6 @@
 import torch
-from torchtext.datasets import Multi30k
-from torchtext.data import Field, BucketIterator
+from torchtext.legacy.datasets import Multi30k
+from torchtext.legacy.data import Field, BucketIterator
 import spacy
 import os
 
@@ -43,10 +43,10 @@ else:
 
 eng = os.path.join(root,args.file_size)
 vi = os.path.join(root,args.file_size)
-with open(os.path.join(eng,'train.en'), 'r') as file :
-    src = file.read()
-with open(os.path.join(eng,'train.vi'), 'r') as file :
-    trg = file.read()
+#with open(os.path.join(eng,'train.en'), 'r') as file :
+ #   src = file.read()
+#with open(os.path.join(eng,'train.vi'), 'r') as file :
+ #   trg = file.read()
 
 spacy_de = spacy.load('de_core_news_sm')
 spacy_en = spacy.load('en_core_web_sm')
@@ -67,7 +67,7 @@ TRG = Field(tokenize=tokenize_en,
             lower=True,
             batch_first=True)
 
-train_data, valid_data, test_data = Multi30k.splits(exts = ('.de', '.en'),
+train_data, valid_data, test_data = Multi30k.splits(exts = ('.de', '.en'),        
                                                     fields = (SRC, TRG))
 SRC.build_vocab(train_data, min_freq = 2)
 TRG.build_vocab(train_data, min_freq = 2)
@@ -101,12 +101,12 @@ dec = Decoder(OUTPUT_DIM,
               DEC_LAYERS,
               DEC_HEADS,
               DEC_PF_DIM,
-              DEC_DROPOUT)
+              DEC_DROPOUT).to(device)
 
 SRC_PAD_IDX = SRC.vocab.stoi[SRC.pad_token]
 TRG_PAD_IDX = TRG.vocab.stoi[TRG.pad_token]
 
-model = Seq2Seq(enc, dec, SRC_PAD_IDX, TRG_PAD_IDX).to(device)
+model = Seq2Seq(enc, dec, SRC_PAD_IDX, TRG_PAD_IDX,device).to(device)
 def count_parameters(model):
     return sum(p.numel() for p in model.parameters() if p.requires_grad)
 
@@ -130,8 +130,8 @@ def train(model, iterator, optimizer, criterion, clip):
     epoch_loss = 0
 
     for i, batch in enumerate(iterator):
-        src = batch.src
-        trg = batch.trg
+        src = batch.src.to(device)
+        trg = batch.trg.to(device)
 
         optimizer.zero_grad()
 
@@ -168,8 +168,8 @@ def evaluate(model, iterator, criterion):
 
     with torch.no_grad():
         for i, batch in enumerate(iterator):
-            src = batch.src
-            trg = batch.trg
+            src = batch.src.to(device)
+            trg = batch.trg.to(device)
 
             output, _ = model(src, trg[:, :-1])
 
