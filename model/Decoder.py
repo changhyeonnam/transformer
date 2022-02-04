@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
-from Multi_Head import MultiHeadAttentionLayer
-
+from model.Multi_Head import MultiHeadAttentionLayer
+from model.Pos_Encoding import PositionwiseFFLayer
 class Decoder(nn.Module):
     '''
     Decoder model has two multi-head attention layers.
@@ -15,10 +15,8 @@ class Decoder(nn.Module):
                  n_heads,
                  pf_dim,
                  dropout,
-                 device,
                  max_length=100):
         super().__init__()
-        self.device = device
 
         self.tok_embedding = nn.Embedding(output_dim, hid_dim)
         self.pos_embedding = nn.Embedding(max_length, hid_dim)
@@ -27,7 +25,7 @@ class Decoder(nn.Module):
         self.fc_out = nn.Linear(hid_dim,output_dim)
         self.dropout = nn.Dropout(dropout)
         self.scale = torch.sqrt(torch.FloatTensor([hid_dim]))
-    def forword(self, trg, enc_src, trg_mask, src_mask):
+    def forward(self, trg, enc_src, trg_mask, src_mask):
         batch_size = trg.shape[0]
         trg_len = trg.shape[1]
         pos = torch.arange(0,trg_len).unsqueeze(0).repeat(batch_size,1)

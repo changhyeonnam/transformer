@@ -6,7 +6,7 @@ class MultiHeadAttentionLayer(nn.Module):
                  hid_dim,
                  n_heads,
                  dropout):
-
+        super(MultiHeadAttentionLayer, self).__init__()
         self.hid_dim = hid_dim
         self.n_heads = n_heads
 
@@ -49,9 +49,9 @@ class MultiHeadAttentionLayer(nn.Module):
         # apply attention to the value
         x = torch.matmul(self.dropout(attention), V)
 
-        x = x.permute(0,2,1,3)
+        x = x.permute(0, 2, 1, 3).contiguous()
 
-        x= x.view(batch_size,-1,self.hid_dim)
+        x = x.view(batch_size, -1, self.hid_dim)
 
         x= self.fc_o(x)
 

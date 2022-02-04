@@ -1,16 +1,17 @@
 import torch
 import torch.nn as nn
-from Multi_Head import MultiHeadAttentionLayer
-from Pos_Encoding import PositionwiseFFLayer
+from model.Multi_Head import MultiHeadAttentionLayer
+from model.Pos_Encoding import PositionwiseFFLayer
 
 class Encoder(nn.Module):
     def __init__(self,
                  input_dim:int,
                  hid_dim:int,
                  n_layers:int,
+                 n_heads,
                  pf_dim:int,
                  dropout:float,
-                 max_length:int=100):
+                 max_length=100):
         super(Encoder,self).__init__()
 
         # token embedding
@@ -24,11 +25,11 @@ class Encoder(nn.Module):
         # scale vector
         self.scale = torch.sqrt(torch.FloatTensor([hid_dim]))
 
-        self.layers = nn.Modulelist([EncoderLayer(hid_dim=hid_dim,
+        self.layers = nn.ModuleList([EncoderLayer(hid_dim=hid_dim,
                                                   n_heads=n_heads,
-                                                  pf_dim=pf_dim,
+                                                  pff_dim=pf_dim,
                                                   dropout=dropout) for _ in range(n_layers)])
-
+        self.dropout = nn.Dropout(dropout)
 
     def forward(self, src, src_mask):
         batch_size = src.shape[0]

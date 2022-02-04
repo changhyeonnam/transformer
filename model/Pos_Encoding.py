@@ -6,7 +6,7 @@ class PositionwiseFFLayer(nn.Module):
                  hid_dim,
                  pff_dim,
                  dropout):
-
+        super(PositionwiseFFLayer, self).__init__()
         # original paper user hid_dim = 512, pff_dim = 2048
         self.fc_1 = nn.Linear(hid_dim, pff_dim)
         self.fc_2 = nn.Linear(pff_dim, hid_dim)
