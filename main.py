@@ -1,11 +1,14 @@
-import os.path
+import os
+os.environ['KMP_DUPLICATE_LIB_OK']='True'
 import torch
+import torchtext
+from torchtext.data import get_tokenizer
 import pandas as pd
 import numpy as np
 import requests
 from parser import args
 from utils import downloads
-
+import spacy
 # argparse doesn't support boolean  type
 download_files = True if args.download == 'True' else False
 
@@ -33,4 +36,18 @@ if download_files:
 else:
     print("Dataset already downloaded")
 
+eng = os.path.join(root,args.file_size)
+vi = os.path.join(root,args.file_size)
+with open(os.path.join(eng,'vocab.en'), 'r') as file :
+    vocab_en = file.read()
+with open(os.path.join(eng,'train.en'), 'r') as file :
+    src = file.read()
+with open(os.path.join(vi,'vocab.vi'), 'r') as file :
+    vocab_vi = file.read()
+with open(os.path.join(eng,'train.vi'), 'r') as file :
+    trg = file.read()
 
+import spacy
+from spacy.lang.en.examples import sentences
+
+nlp = spacy.load("en_core_web_sm")# nlp = spacy.load("en_core_web_sm")
